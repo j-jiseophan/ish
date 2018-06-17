@@ -1,2 +1,2 @@
 #include "dynarray.h"
-DynArray_T parseTokens(DynArray_T Tokens);
+DynArray_T parseTokens(DynArray_T tokens);
