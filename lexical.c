@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include "lexical.h"
 #define FALSE 0
 #define TRUE 1
 enum cases{
@@ -14,18 +15,20 @@ enum cases{
     EXIT
 };
 
-int i;
-int state;
-char c;
-char curToken[256];
-int tokenLength;
-int quitionOpen=FALSE;
-int quotionBegin;
-int quotionEnd;
+//int i;
+//int state;
+
 DynArray_T tokens;
 DynArray_T strToTokens(char *input){
+    int i=0;
+    int state=0;
+    char c;
+    char curToken[256]={0};
+    int tokenLength=0;
+    int quotionBegin=0;
+    int quotionEnd=0;
     tokens=DynArray_new(0);
-    while(input[i]!='\n'){
+    while(input[i]!='\n' && input[i]!='\000'){
         c=input[i];
         switch(state){
             case START:
@@ -36,10 +39,15 @@ DynArray_T strToTokens(char *input){
                     quotionBegin=i;
                     quotionEnd=quotionBegin;
                     i++;
-                    for(i;input[i]!='\n';i++){
+                    for(;input[i]!='\n'&&input[i]!='\000';i++){
                         if (input[i]=='"'){
                             quotionEnd=i;
+                            break;
                         }
+                    }
+                    if (input[i]=='\n' || input[i]=='\000'){
+                        state=ERROR;
+                        break;
                     }
                     if(quotionEnd==quotionBegin){
                         state=ERROR;
@@ -77,10 +85,15 @@ DynArray_T strToTokens(char *input){
                     quotionBegin=i;
                     quotionEnd=quotionBegin;
                     i++;
-                    for(i;input[i]!='\n';i++){
+                    for(;input[i]!='\n'&&input[i]!='\000';i++){
                         if (input[i]=='"'){
                             quotionEnd=i;
+                            break;
                         }
+                    }
+                    if (input[i]=='\n' || input[i]=='\000'){
+                        state=ERROR;
+                        break;
                     }
                     if(quotionEnd==quotionBegin){
                         state=ERROR;
@@ -121,10 +134,15 @@ DynArray_T strToTokens(char *input){
                     quotionBegin=i;
                     quotionEnd=quotionBegin;
                     i++;
-                    for(i;input[i]!='\n';i++){
+                    for(;input[i]!='\n'&&input[i]!='\000';i++){
                         if (input[i]=='"'){
                             quotionEnd=i;
+                            break;
                         }
+                    }
+                    if (input[i]=='\n' || input[i]=='\000'){
+                        state=ERROR;
+                        break;
                     }
                     if(quotionEnd==quotionBegin){
                         state=ERROR;
@@ -163,10 +181,15 @@ DynArray_T strToTokens(char *input){
                     quotionBegin=i;
                     quotionEnd=quotionBegin;
                     i++;
-                    for(i;input[i]!='\n';i++){
+                    for(;input[i]!='\n'&&input[i]!='\000';i++){
                         if (input[i]=='"'){
                             quotionEnd=i;
+                            break;
                         }
+                    }
+                    if (input[i]=='\n' || input[i]=='\000'){
+                        state=ERROR;
+                        break;
                     }
                     if(quotionEnd==quotionBegin){
                         state=ERROR;
@@ -185,7 +208,7 @@ DynArray_T strToTokens(char *input){
                     state=IN_NUMBER;
                 }
                 else if(isspace(c)){
-                    break;
+                    state=START;
                 }
                 else{
                     curToken[tokenLength]=c;
@@ -204,10 +227,15 @@ DynArray_T strToTokens(char *input){
                     quotionBegin=i;
                     quotionEnd=quotionBegin;
                     i++;
-                    for(i;input[i]!='\n';i++){
+                    for(;input[i]!='\n'&&input[i]!='\000';i++){
                         if (input[i]=='"'){
                             quotionEnd=i;
+                            break;
                         }
+                    }
+                    if (input[i]=='\n' || input[i]=='\000'){
+                        state=ERROR;
+                        break;
                     }
                     if(quotionEnd==quotionBegin){
                         state=ERROR;
@@ -225,7 +253,7 @@ DynArray_T strToTokens(char *input){
                     state=IN_NUMBER;
                 }
                 else if(isspace(c)){
-                    DynArray_add(tokens,curToken);
+                    DynArray_add(tokens,strdup(curToken));
                     memset(curToken,0,sizeof(curToken));
                     tokenLength=0;
                     state=START;
@@ -236,18 +264,24 @@ DynArray_T strToTokens(char *input){
                     state=IN_WORD;
                 }
                 break;
-            case ERROR:
-                printf("error");
-                return 0;
         }
         i++;
     }
-    for(int i=0;i<=DynArray_getLength(tokens);i++){
+    if(state==ERROR){
+            printf("error!!\n");
+            return NULL;
+        }
+    if(curToken!=NULL){
+        DynArray_add(tokens,strdup(curToken));
+    }/*this is for debug
+    for(int i=0;i<DynArray_getLength(tokens);i++){
         printf("%s\n",(char*)DynArray_get(tokens,i));
-    }
+    }*/
     return tokens;
-}
+}/*
 int main(){
-    strToTokens("hi my name is jiseop\n");
+    char*input="ps -A | grep sshd | sed -e '1,10d'";
+    printf("intput is : %s\n",input);
+    strToTokens(input);
     return 0;
-}
+}*/
