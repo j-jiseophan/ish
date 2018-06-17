@@ -26,7 +26,6 @@ int exeOne(DynArray_T oneCommand){
     }
     //in parent
     wait(&status);
-
     return 0;
 }
 

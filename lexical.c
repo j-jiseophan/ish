@@ -28,7 +28,8 @@ DynArray_T strToTokens(char *input){
     int quotionBegin=0;
     int quotionEnd=0;
     tokens=DynArray_new(0);
-    while(input[i]!='\n' && input[i]!='\000'){
+    
+    while(input[i]!='\n' && input[i]!='\r' && input[i]!='\000'){  
         c=input[i];
         switch(state){
             case START:
@@ -270,11 +271,10 @@ DynArray_T strToTokens(char *input){
     if(state==ERROR){
             printf("./ish: Could not find quote pair\n");
             return NULL;
-        }/*
+        }
     if(curToken!='\000'){ //i think it is not needed
-        printf("curtoken : %s",curToken);
         DynArray_add(tokens,strdup(curToken));
-        }*/
+        }
     /*this is for debug
     for(int i=0;i<DynArray_getLength(tokens);i++){
         printf("%s\n",(char*)DynArray_get(tokens,i));

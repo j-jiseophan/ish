@@ -40,6 +40,7 @@ DynArray_T parseTokens(DynArray_T tokens){
             printf("%s, ",(char*)DynArray_get(DynArray_get(output,j),i));
         }
         
-    }*/
+    }
+    printf("\n");*/
     return output;
 }
