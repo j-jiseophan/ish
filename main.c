@@ -26,6 +26,7 @@ int initialization(){
         if(tokens==NULL){
             continue;
         }
+        exeAll(tokens);
         //printf("\n--------------------------------\n");
     }
     fclose(fp);
@@ -33,13 +34,13 @@ int initialization(){
 }
 int main(void){
     DynArray_T tokens;
-    initialization();
+    //initialization();
     while(1){
         pid_t pid1;
         char userInput[BUFFERSIZE];
         printf("%% ");
         fgets(userInput, BUFFERSIZE, stdin);
-        printf("usr : %s\n",userInput);
+        //printf("usr : %s\n",userInput);
         tokens=strToTokens(userInput);
         if(tokens==NULL){
             printf("error : NULL token\n");

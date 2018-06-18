@@ -272,15 +272,14 @@ DynArray_T strToTokens(char *input){
             printf("./ish: Could not find quote pair\n");
             return NULL;
         }
-    printf("curtoken[0] : %d\n",curToken[0]);
     if(curToken!='\000'&&curToken[0]!=0){ //i think it is not needed
         DynArray_add(tokens,strdup(curToken));
         }
-    /*this is for debug*/
+    /*this is for debug
     for(int i=0;i<DynArray_getLength(tokens);i++){
         printf("%dth: %s\n",i,(char*)DynArray_get(tokens,i));
     }
-    printf("length : %d\n",DynArray_getLength(tokens));
+    printf("length : %d\n",DynArray_getLength(tokens));*/
     return tokens;
 }/*
 int main(){

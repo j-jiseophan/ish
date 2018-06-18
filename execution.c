@@ -16,7 +16,6 @@ int exeOne(DynArray_T oneCommand){
     argv=(char**)calloc(sizeof(char*),1+DynArray_getLength(oneCommand));
     for(int i=0; i<DynArray_getLength(oneCommand); i++){
         argv[i]=DynArray_get(oneCommand,i);
-        printf("arg%d : %s\n",i,argv[i]);
     }
     argv[DynArray_getLength(oneCommand)]=NULL;
     commandName=DynArray_get(oneCommand,0);
