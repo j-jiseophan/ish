@@ -14,7 +14,7 @@ int initialization(){
     FILE *fp;
     DynArray_T tokens;
     char buffer[BUFFERSIZE];
-    fp = fopen("/home/.ishrc", "r");
+    fp = fopen("/home/.ishrc", "r");//my pc : /home/.ishrc, labmachine : /mnt/home/20170726
     while(!feof(fp)){
         fgets(buffer, sizeof(buffer), fp);
         printf("%% %s",buffer);

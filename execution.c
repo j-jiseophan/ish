@@ -12,20 +12,68 @@ int exeOne(DynArray_T oneCommand){
     pid_t pid;
     int status;
     char **argv;
-    argv=(char**)malloc(sizeof(char*)*DynArray_getLength(oneCommand));
-    for(int i=1; i<DynArray_getLength(oneCommand); i++){
+    char *commandName;
+    argv=(char**)calloc(sizeof(char*),1+DynArray_getLength(oneCommand));
+    for(int i=0; i<DynArray_getLength(oneCommand); i++){
         argv[i]=DynArray_get(oneCommand,i);
-        argv[DynArray_getLength(oneCommand)-1]=NULL;
+        printf("arg%d : %s\n",i,argv[i]);
     }
-    
-    pid=fork();
-    if(pid==0){//in child
-        execvp(DynArray_get(oneCommand,0),argv);
-        fprintf(stderr, "exec failed\n");
-        exit(EXIT_FAILURE);
+    argv[DynArray_getLength(oneCommand)]=NULL;
+    commandName=DynArray_get(oneCommand,0);
+    if(!strcmp(commandName,"setenv")){//four built-in commands
+        
+        if((argv[2]!=NULL&&argv[3]!=NULL) || argv[1]==NULL){ //invalid number of argument
+            perror("./sampleish: setenv takes one or two parameters\n");
+            return 0;
+        }
+        if(argv[2]!=NULL){//ordinary case
+            if(setenv(argv[1],argv[2],1)!=0){
+                perror("error occured in setenv command\n");
+            }
+        }
+        else{
+            if(setenv(argv[1],"",1)==-1){
+                perror("error occured in setenv command\n");
+            }
+        }
     }
-    //in parent
-    wait(&status);
+    else if(!strcmp(commandName,"unsetenv")){
+        if(argv[2]!=NULL || argv[1]==NULL){ //invalid number of argument
+            perror("./sampleish: unsetenv takes one parameter\n");
+            return 0;
+        }
+        if(unsetenv(argv[1])!=0){
+            perror("error occured in unsetenv command\n");
+        }
+    }
+    else if(!strcmp(commandName,"cd")){
+        if(argv[2]!=NULL || argv[1]==NULL){ //invalid number of argument
+            perror("./sampleish: cd takes one parameter\n");
+            return 0;
+        }
+        if(chdir(argv[1])!=0){
+            perror("error occured in cd command\n");
+        }
+    }
+    else if(!strcmp(commandName,"exit")){
+        if(argv[1]!=NULL){ //invalid number of argument
+            perror("./sampleish: exit does not take any parameters\n");
+            return 0;
+        }
+        exit(0);
+    }
+    else{//not built-in command
+        pid=fork();
+        if(pid==0){//in child
+            execvp(commandName,argv);
+            fprintf(stderr,"%s: No such file or directory\n",commandName);
+            exit(EXIT_FAILURE);
+        }
+        //in parent
+        wait(&status);
+    }
+    free(argv);
+    argv=NULL;
     return 0;
 }
 
