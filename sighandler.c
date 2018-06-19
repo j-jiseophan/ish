@@ -5,10 +5,11 @@
 
 void handleSIGQUIT(int signo){
     printf("Type Ctrl-\\ again within seconds to exit.\n");
+    printf("%% ");
     fflush(NULL);
-    printf("helloworld\n");
     alarm(5);
     signal(SIGQUIT,SIG_DFL);
+    return;
 
 }
 void handleSIGALRM(int signo){
