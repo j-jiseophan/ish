@@ -12,7 +12,7 @@ DynArray_T parseTokens(DynArray_T tokens){
     }
     int commands=0;
     if(strcmp(DynArray_get(tokens,0),"|")==0 || strcmp(DynArray_get(tokens,DynArray_getLength(tokens)-1),"|")==0){
-        perror("./sampleish: invalid bar position\n");
+        perror("./ish: invalid bar position\n");
         for(int i=0; i<DynArray_getLength(tokens); i++){
             free(DynArray_get(tokens,i));
         }
@@ -25,7 +25,7 @@ DynArray_T parseTokens(DynArray_T tokens){
         }
         if(strcmp(DynArray_get(tokens,i),"|")==0){
             if(bar==1){
-                perror("./sampleish: overlaped bars\n");
+                perror("./ish: overlaped bars\n");
                 for(int i=0; i<DynArray_getLength(tokens); i++){
                     free(DynArray_get(tokens,i));
                 }
