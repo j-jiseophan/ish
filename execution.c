@@ -68,7 +68,7 @@ int exeOne(DynArray_T oneCommand){
         if(pid==0){//in child
             signal(SIGINT,SIG_DFL);
             signal(SIGQUIT, SIG_IGN);
-            printf("i will run : %s\n",commandName);
+            //printf("i will run : %s\n",commandName);
             execvp(commandName,argv);
             fprintf(stderr,"%s: No such file or directory\n",commandName);
             exit(EXIT_FAILURE);
