@@ -22,8 +22,8 @@ int exeOne(DynArray_T oneCommand){
     commandName=DynArray_get(oneCommand,0);
     if(!strcmp(commandName,"setenv")){//four built-in commands
         
-        if((argv[2]!=NULL&&argv[3]!=NULL) || argv[1]==NULL){ //invalid number of argument
-            perror("./sampleish: setenv takes one or two parameters\n");
+        if((argv[2]!=NULL&&argv[3]!=NULL) || argv[1]==NULL || numOfCommand>1){ //invalid number of argument
+            perror("./ish: setenv takes one or two parameters\n");
             return 0;
         }
         if(argv[2]!=NULL){//ordinary case
@@ -38,7 +38,7 @@ int exeOne(DynArray_T oneCommand){
         }
     }
     else if(!strcmp(commandName,"unsetenv")){
-        if(argv[2]!=NULL || argv[1]==NULL){ //invalid number of argument
+        if(argv[2]!=NULL || argv[1]==NULL || numOfCommand>1){ //invalid number of argument
             perror("./sampleish: unsetenv takes one parameter\n");
             return 0;
         }
@@ -47,7 +47,7 @@ int exeOne(DynArray_T oneCommand){
         }
     }
     else if(!strcmp(commandName,"cd")){
-        if(argv[2]!=NULL || argv[1]==NULL){ //invalid number of argument
+        if(argv[2]!=NULL || argv[1]==NULL || numOfCommand>1){ //invalid number of argument
             perror("./sampleish: cd takes one parameter\n");
             return 0;
         }
@@ -56,7 +56,7 @@ int exeOne(DynArray_T oneCommand){
         }
     }
     else if(!strcmp(commandName,"exit")){
-        if(argv[1]!=NULL){ //invalid number of argument
+        if(argv[1]!=NULL || numOfCommand>1){ //invalid number of argument
             perror("./sampleish: exit does not take any parameters\n");
             return 0;
         }
