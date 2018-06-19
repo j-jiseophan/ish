@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include "dynarray.h"
 #include "execution.h"
 #define MAXARGSIZE 1024
@@ -62,8 +63,11 @@ int exeOne(DynArray_T oneCommand){
         exit(0);
     }
     else{//not built-in command
+        fflush(NULL);
         pid=fork();
         if(pid==0){//in child
+            signal(SIGINT,SIG_DFL);
+            printf("i will run : %s\n",commandName);
             execvp(commandName,argv);
             fprintf(stderr,"%s: No such file or directory\n",commandName);
             exit(EXIT_FAILURE);
