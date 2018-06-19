@@ -12,6 +12,8 @@ enum cases{
     IN_WORD,
     IN_QUOTION,
     IN_BAR,
+    IN_LT,
+    IN_GT,
     ERROR,
     EXIT
 };
@@ -36,6 +38,12 @@ DynArray_T strToTokens(char *input){
             case START:
                 if(c=='|'){
                     state=IN_BAR;
+                }
+                else if(c=='<'){
+                    state=IN_LT;
+                }
+                else if(c=='>'){
+                    state=IN_GT;
                 }
                 else if(c=='"'){
                     quotionBegin=i;
@@ -82,6 +90,18 @@ DynArray_T strToTokens(char *input){
                     memset(curToken,0,sizeof(curToken));
                     tokenLength=0;
                     state=IN_BAR;
+                }
+                else if(c=='<'){
+                    DynArray_add(tokens,strdup(curToken));
+                    memset(curToken,0,sizeof(curToken));
+                    tokenLength=0;
+                    state=IN_LT;
+                }
+                else if(c=='>'){
+                    DynArray_add(tokens,strdup(curToken));
+                    memset(curToken,0,sizeof(curToken));
+                    tokenLength=0;
+                    state=IN_GT;
                 }
                 else if(c=='"'){
                     quotionBegin=i;
@@ -132,6 +152,18 @@ DynArray_T strToTokens(char *input){
                     tokenLength=0;
                     state=IN_BAR;
                 }
+                else if(c=='<'){
+                    DynArray_add(tokens,strdup(curToken));
+                    memset(curToken,0,sizeof(curToken));
+                    tokenLength=0;
+                    state=IN_LT;
+                }
+                else if(c=='>'){
+                    DynArray_add(tokens,strdup(curToken));
+                    memset(curToken,0,sizeof(curToken));
+                    tokenLength=0;
+                    state=IN_GT;
+                }
                 else if(c=='"'){
                     quotionBegin=i;
                     quotionEnd=quotionBegin;
@@ -179,6 +211,112 @@ DynArray_T strToTokens(char *input){
                 if(c=='|'){
                     break;
                 }
+                else if(c=='<'){
+                    state=IN_LT;
+                }
+                else if(c=='>'){
+                    state=IN_GT;
+                }
+                else if(c=='"'){
+                    quotionBegin=i;
+                    quotionEnd=quotionBegin;
+                    i++;
+                    for(;input[i]!='\n'&&input[i]!='\000';i++){
+                        if (input[i]=='"'){
+                            quotionEnd=i;
+                            break;
+                        }
+                    }
+                    if (input[i]=='\n' || input[i]=='\000'){
+                        state=ERROR;
+                        break;
+                    }
+                    if(quotionEnd==quotionBegin){
+                        state=ERROR;
+                        break;
+                    }
+                    else if(quotionEnd-quotionBegin>1){
+                        strncat(curToken,input+quotionBegin+1,quotionEnd-quotionBegin-1);
+                        tokenLength+=quotionEnd-quotionBegin-1;
+                    }
+                    state=IN_QUOTION;
+                    break;
+                }
+                else if(isdigit(c)){
+                    curToken[tokenLength]=c;
+                    tokenLength++;
+                    state=IN_NUMBER;
+                }
+                else if(isspace(c)){
+                    state=START;
+                }
+                else{
+                    curToken[tokenLength]=c;
+                    tokenLength++;
+                    state=IN_WORD;
+                }
+                break;
+            case IN_LT:
+                DynArray_add(tokens,"<");
+                if(c=='|'){
+                    state=IN_BAR;
+                }
+                else if(c=='<'){
+                    break;
+                }
+                else if(c=='>'){
+                    state=IN_GT;
+                }
+                else if(c=='"'){
+                    quotionBegin=i;
+                    quotionEnd=quotionBegin;
+                    i++;
+                    for(;input[i]!='\n'&&input[i]!='\000';i++){
+                        if (input[i]=='"'){
+                            quotionEnd=i;
+                            break;
+                        }
+                    }
+                    if (input[i]=='\n' || input[i]=='\000'){
+                        state=ERROR;
+                        break;
+                    }
+                    if(quotionEnd==quotionBegin){
+                        state=ERROR;
+                        break;
+                    }
+                    else if(quotionEnd-quotionBegin>1){
+                        strncat(curToken,input+quotionBegin+1,quotionEnd-quotionBegin-1);
+                        tokenLength+=quotionEnd-quotionBegin-1;
+                    }
+                    state=IN_QUOTION;
+                    break;
+                }
+                else if(isdigit(c)){
+                    curToken[tokenLength]=c;
+                    tokenLength++;
+                    state=IN_NUMBER;
+                }
+                else if(isspace(c)){
+                    state=START;
+                }
+                else{
+                    curToken[tokenLength]=c;
+                    tokenLength++;
+                    state=IN_WORD;
+                }
+                break;
+            case IN_GT:
+                DynArray_add(tokens,">");
+                if(c=='|'){
+                    state=IN_BAR;
+                }
+                else if(c=='<'){
+                    state=IN_LT;
+                }
+                else if(c=='>'){
+                    break;
+                }
                 else if(c=='"'){
                     quotionBegin=i;
                     quotionEnd=quotionBegin;
@@ -224,6 +362,18 @@ DynArray_T strToTokens(char *input){
                     memset(curToken,0,sizeof(curToken));
                     tokenLength=0;
                     state=IN_BAR;
+                }
+                else if(c=='<'){
+                    DynArray_add(tokens,strdup(curToken));
+                    memset(curToken,0,sizeof(curToken));
+                    tokenLength=0;
+                    state=IN_LT;
+                }
+                else if(c=='>'){
+                    DynArray_add(tokens,strdup(curToken));
+                    memset(curToken,0,sizeof(curToken));
+                    tokenLength=0;
+                    state=IN_GT;
                 }
                 else if(c=='"'){
                     quotionBegin=i;

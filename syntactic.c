@@ -26,9 +26,9 @@ DynArray_T parseTokens(DynArray_T tokens){
         if(strcmp(DynArray_get(tokens,i),"|")==0){
             if(bar==1){
                 perror("./ish: overlaped bars\n");
-                for(int i=0; i<DynArray_getLength(tokens); i++){
+                /*for(int i=0; i<DynArray_getLength(tokens); i++){
                     free(DynArray_get(tokens,i));
-                }
+                }*/
                 DynArray_free(tokens);
                 return NULL;
             }
@@ -71,7 +71,7 @@ DynArray_T parseTokens(DynArray_T tokens){
                     strchr((DynArray_get(DynArray_get(output,i),j)),'>')!=
                     strrchr((DynArray_get(DynArray_get(output,i),j)),'>')||
                     gts==1){
-                    fprintf(stderr,"Invalid: Multiple redirection of standard input\n");
+                    fprintf(stderr,"Invalid: Multiple redirection of standard output\n");
                     return NULL;
                 }
                 if(j==0){

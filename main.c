@@ -28,12 +28,12 @@ int initialization(){
         }
         tokens=strToTokens(buffer);
         if(tokens==NULL){
-            printf("error : NULL token\n");
+          //  printf("error : NULL token\n");
             continue;
         }
         tokens=parseTokens(tokens);
         if(tokens==NULL){
-            printf("error : NULL parsed\n");
+          //  printf("error : NULL parsed\n");
             continue;
         }
         exeAll(tokens);
@@ -53,7 +53,7 @@ int main(void){
     assert(pfSig1 != SIG_ERR);
     assert(pfSig2 != SIG_ERR);
     assert(pfSig3 != SIG_ERR);
-   // initialization();
+    initialization();
     while(1){
         pid_t pid1;
         char userInput[BUFFERSIZE];
@@ -63,13 +63,13 @@ int main(void){
         //printf("usr : %s\n",userInput);
         tokens=strToTokens(userInput);
         if(tokens==NULL){
-            printf("error : NULL token\n");
+        //    printf("error : NULL token\n");
             continue;
           //  return -1;
         }
         tokens=parseTokens(tokens);
         if(tokens==NULL){
-            printf("error : NULL parsed\n");
+         //   printf("error : NULL parsed\n");
             continue;
             //return -1;
         }
