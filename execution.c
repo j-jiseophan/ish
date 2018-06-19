@@ -67,6 +67,7 @@ int exeOne(DynArray_T oneCommand){
         pid=fork();
         if(pid==0){//in child
             signal(SIGINT,SIG_DFL);
+            signal(SIGQUIT, SIG_IGN);
             printf("i will run : %s\n",commandName);
             execvp(commandName,argv);
             fprintf(stderr,"%s: No such file or directory\n",commandName);
@@ -84,6 +85,14 @@ int exeAll(DynArray_T allCommands){
     for(int i=0; i<DynArray_getLength(allCommands); i++){
        exeOne(DynArray_get(allCommands,i));
     }
+
+    for(int i=0; i<DynArray_getLength(allCommands); i++){
+       for(int j=0; j<DynArray_getLength(DynArray_get(allCommands,i));j++){
+           free(DynArray_get(DynArray_get(allCommands,i),j));
+       }
+       DynArray_free(DynArray_get(allCommands,i));
+    }
+    DynArray_free(allCommands);
     return 0;
 }
 

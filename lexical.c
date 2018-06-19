@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "lexical.h"
 #define FALSE 0
 #define TRUE 1
@@ -270,6 +271,10 @@ DynArray_T strToTokens(char *input){
     }
     if(state==ERROR){
             printf("./ish: Could not find quote pair\n");
+            for(int i=0; i<DynArray_getLength(tokens); i++){
+                free(DynArray_get(tokens,i));
+            }
+            DynArray_free(tokens);
             return NULL;
         }
     if(curToken!='\000'&&curToken[0]!=0){ //i think it is not needed
